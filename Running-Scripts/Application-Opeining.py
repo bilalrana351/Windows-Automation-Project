@@ -1,16 +1,15 @@
-import subprocess
-import os.path
+import os
 
 def open_program(program_name):
-    program_path = 'C:/ProgramData/Microsoft/Windows/Start Menu/Programs/' + program_name
+    program_path = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\" + program_name + ".lnk"
     
     try:
-        subprocess.Popen(program_path)
+        os.startfile(program_path)
         print(f"Successfully opened {program_path}")
 
     except:
         print("File doesn't exixt")
 
 # Example usage
-program_name = "C:/Program Files/ExampleProgram.exe"
+program_name = "Google Chrome"
 open_program(program_name)
