@@ -6,6 +6,7 @@ import Prompts
 import ApiKey
 
 # Set the API key and environment variable
+# TODO : In an actual production environment, we will have to set the API key in the environment variable, or it will have to be decided later
 openai.api_key = ApiKey.API_KEY
 os.environ["OPENAI_API_KEY"] = ApiKey.API_KEY
 client = OpenAI()

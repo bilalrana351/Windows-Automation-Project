@@ -1,20 +1,15 @@
 import pyaudio
 import wave
 import keyboard
-import openai
-from openai import OpenAI
-import dotenv
 import datetime
 import os
+import WhisperModel
 
-# Load environment variables
-dotenv.load_dotenv()
+# Now we will load the model here
+# However in production it will be more favourable if the model was loaded in the application workflow
+WhisperModel.loadWhisperModel("base.en")
 
-openai.api_key = "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"
-os.environ["OPENAI_API_KEY"] = "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"
-client = OpenAI()
-
-def get_question(): 
+def getTranscribedAudio(): 
     # Set up parameters for recording
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
@@ -22,7 +17,7 @@ def get_question():
     CHUNK = 1024
 
     now = datetime.datetime.now()
-    WAVE_OUTPUT_FILENAME = f"recording_{now.strftime('%Y-%m-%d_%H-%M-%S')}.wav"
+    WAVE_OUTPUT_FILENAME = f"recording.wav"
 
     audio = pyaudio.PyAudio()
 
@@ -30,20 +25,22 @@ def get_question():
     stream = audio.open(format=FORMAT, channels=CHANNELS,
                     rate=RATE, input=True,
                     frames_per_buffer=CHUNK)
-    print("Recording... (Press SPACE to stop)")
     frames = []
 
     recording = True  # Flag to control recording
+
+    # TODO: This statement will be removed at the time of the production
+    print("Recording")
 
     while recording:
         data = stream.read(CHUNK)
         frames.append(data)
 
         # Check if the SPACE key has been pressed
+        # We will have to change it to the desired key
+        # TODO : In actual production we will like it to be a button like the tab button, will have to be decided later
         if keyboard.is_pressed(' '):
             recording = False
-
-    print("Finished recording")
 
     # Stop recording
     stream.stop_stream()
@@ -58,22 +55,22 @@ def get_question():
     wf.writeframes(b''.join(frames))
     wf.close()
 
+    # TODO : This will have to be removed at the time of production
+    print(WAVE_OUTPUT_FILENAME + " has been saved")
 
-    # speech to text
-    audio_file = open(WAVE_OUTPUT_FILENAME, "rb")
-    transcript = client.audio.transcriptions.create(
-        model="whisper-1",
-        language="en", 
-        file=audio_file,
-        response_format="text"
-    )
+    # Now this will be the code that will call the openai whisper model
+    transcript = WhisperModel.callWhisperModel(WAVE_OUTPUT_FILENAME)
 
-    # delete the audio file
-    audio_file.close()
     os.remove(WAVE_OUTPUT_FILENAME)
+
+    # TODO : This will have to be removed at the time of production
+    print("Removed the file")
+
+    # TODO : This will have to be removed at the time of production
+    print(transcript)
 
     return transcript 
 
-print(get_question())
-
-# https://github.com/gbaeke/openai_assistant/   
+# This file is not meant to be run directly, if anyone tries to run it directly we will raise an error
+if __name__ == "__main__":
+    raise Exception("This file is not meant to be run directly")
