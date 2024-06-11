@@ -6,7 +6,7 @@ import os
 import WhisperModel
 
 # Now we will load the model here
-# However in production it will be more favourable if the model was loaded in the application workflow
+# TODO : However in production it will be more favourable if the model was loaded in the application workflow
 WhisperModel.loadWhisperModel("base.en")
 
 def getTranscribedAudio(): 
@@ -17,7 +17,7 @@ def getTranscribedAudio():
     CHUNK = 1024
 
     now = datetime.datetime.now()
-    WAVE_OUTPUT_FILENAME = f"recording.wav"
+    WAVE_OUTPUT_FILENAME = "recording.wav"
 
     audio = pyaudio.PyAudio()
 
