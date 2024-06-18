@@ -3,12 +3,13 @@ from openai import OpenAI
 import os
 import json
 import Prompts
-import ApiKey
+from dotenv import load_dotenv, dotenv_values
+
+load_dotenv("GPTResponse\.env")
 
 # Set the API key and environment variable
 # TODO : In an actual production environment, we will have to set the API key in the environment variable, or it will have to be decided later
-openai.api_key = ApiKey.API_KEY
-os.environ["OPENAI_API_KEY"] = ApiKey.API_KEY
+openai.api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI()
 
 # This will be function that will get the GPT Function
