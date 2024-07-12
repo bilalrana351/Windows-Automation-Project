@@ -1,4 +1,4 @@
-whisper
+whisper-openai
 pyaudio
 wave
 keyboard
